@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <div>
+        <div>
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Despesa
+                            </th>
+                            <th>
+                                Valor
+                            </th>
+                                <th>
+                                    Data
+                                </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                {% for despesa in despesas}
+                                <th> {{despesa.nome}}</th>
+                                <th> {{despesa.valor}}</th>
+                                <th>{{despesa.data}}</th>
+                                {% endfor %}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
