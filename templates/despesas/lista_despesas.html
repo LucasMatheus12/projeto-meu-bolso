@@ -20,13 +20,14 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>
+                            <tr>
                                 {% for despesa in despesas}
                                 <th> {{despesa.nome}}</th>
                                 <th> {{despesa.valor}}</th>
-                                <th>{{despesa.data}}</th>
-                                {% endfor %}
-                            </th>
+                                <th>{{despesa.data|date:'d/m/y'}}</th>
+                                <th><i class="bi bi-pencil-square"></i> Editar</th>
+                            </tr>
+                            {% endfor %}
                         </tr>
                     </tbody>
                 </table>
