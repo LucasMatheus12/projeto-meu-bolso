@@ -1,9 +1,29 @@
 from django.shortcuts import render
 from django.views import View
 from .models import Categoria, Despesa
-from .forms import CategoriaForm
+from .forms import CategoriaForm, DespesaForm
 from django.shortcuts import render,redirect
 # Create your views here.
+
+class AdicionarDespesaView(View): 
+    template_name='despesas/adicionando_depesas.html'
+    def get(self,request):
+        Categorias= Categoria.objects.filter(usuario = request.user)
+        form = DespesaForm(user=request.user)
+        context = {
+            'categorias':categorias, 
+            'form':form,
+        }
+        return render(request,self.template_name,context)
+    def post(self, request): 
+        form = DespesaForm(request.user,request.POST)
+        if form.is_valid(): 
+            despesa= form.save(commit=False)
+            despesa.usuario = request.user
+            despesa.save()
+            return redirect ('lista_depesas')
+        categorias = Categoria.objects.filter(usuario=request.user)
+        return render(request, self.template_name,{'categorias':categorias,'form':form})
 class ListaDespesasView(View):
     template_name='despesas/lista_despesas.html'
     def get(self,request):
