@@ -27,6 +27,7 @@
                             <th> {{despesa.valor}}</th>
                             <th>{{despesa.data|date:'d/m/y'}}</th>
                             <th><i class="bi bi-pencil-square"></i> Editar</th>
+                            <a href="{% url 'excluir_despesa' despesa.id %}"><th><i class="bi bi-file-x-fill"></i> </th></a>
                             {% endfor %}
                         </tr>
                      
