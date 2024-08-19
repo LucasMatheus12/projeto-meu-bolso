@@ -26,11 +26,19 @@
                             <th> {{despesa.nome}}</th>
                             <th> {{despesa.valor}}</th>
                             <th>{{despesa.data|date:'d/m/y'}}</th>
-                            <th><i class="bi bi-pencil-square"></i> Editar</th>
-                            <a href="{% url 'excluir_despesa' despesa.id %}"><th><i class="bi bi-file-x-fill"></i> </th></a>
+                            <th> 
+                                <a href="{% url 'editar_despesa' despesa.pk' %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a> 
+                            </th>
+                            <th>
+                            <a href="{% url 'excluir_despesa' despesa.id %}"><th>
+                                <i class="bi bi-file-x-fill"></i> </th>
+                            
+                            </a>
+                        </th>
+                            </tr>
                             {% endfor %}
-                        </tr>
-                     
                     </tbody>
                 </table>
             </div>

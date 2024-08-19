@@ -4,6 +4,20 @@ from .models import Categoria, Despesa
 from .forms import CategoriaForm, DespesaForm
 from django.shortcuts import render,redirect
 # Create your views here.
+class EditarDespesaView(View):
+    template_name = 'despesas/editar_despesa.html'
+    def get(self,,pk):
+        despesa = Despesa.objects.get(pk=pk)
+        form = DespesaForm(request.user, instance=despesa)
+        categoria = categoria.objects.filter(usuario=request.user)
+        return render (request, self.template_name,{'form':form,'despesa':despesa})
+    def post(self,request,pk):
+        despesa = Despesa.objets.get(pk=pk)
+        form = DespesaForm(request.user,request.POST, instance = despesa) 
+        if form.is_valid():
+            form.save()
+        categorias = Categoria.objects.filter(usuario = request.user)
+                return render (request, self.template_name,{'form':form,'categorias':categorias})
 class ExcluirDespesaView():
     template_name='despesas/excluir_despesa.html'
     def get(self,request,pk):
