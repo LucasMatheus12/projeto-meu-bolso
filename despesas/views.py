@@ -3,7 +3,13 @@ from django.views import View
 from .models import Categoria, Despesa
 from .forms import CategoriaForm, DespesaForm
 from django.shortcuts import render,redirect
-# Create your views here.
+from django.db.models import Sum
+
+class EstatisticasView(View):
+    template_name='despesa/estatisticas.html'
+    def get(self,request):
+        estatisticas = Despesa.objects.filter(usuario=request.user).values('categoria_nome').annotate(total=Sum('valor'))
+
 class EditarDespesaView(View):
     template_name = 'despesas/editar_despesa.html'
     def get(self,,pk):
