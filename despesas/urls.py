@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GerenciarCategoriaView,ListaDespesasView,AdicionarDespesaView,ExcluirDespesaView
+from .views import GerenciarCategoriaView,ListaDespesasView,AdicionarDespesaView,ExcluirDespesaView,EditarDespesaView
 
 
 urlpatterns=[

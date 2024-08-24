@@ -12,25 +12,25 @@ class EstatisticasView(View):
 
 class EditarDespesaView(View):
     template_name = 'despesas/editar_despesa.html'
-    def get(self,,pk):
+    def get(self,request,pk):
         despesa = Despesa.objects.get(pk=pk)
         form = DespesaForm(request.user, instance=despesa)
-        categoria = categoria.objects.filter(usuario=request.user)
-        return render (request, self.template_name,{'form':form,'despesa':despesa})
+        categoria = Categoria.objects.filter(usuario=request.user)
+        return render (request,self.template_name,{'form':form,'despesa':despesa})
     def post(self,request,pk):
-        despesa = Despesa.objets.get(pk=pk)
-        form = DespesaForm(request.user,request.POST, instance = despesa) 
+        despesa = Despesa.objects.get(pk=pk)
+        form = DespesaForm(request.user,request.POST, instance = despesa)
         if form.is_valid():
             form.save()
         categorias = Categoria.objects.filter(usuario = request.user)
-                return render (request, self.template_name,{'form':form,'categorias':categorias})
-class ExcluirDespesaView():
+        return render (request,self.template_name,{'form':form,'categorias':categorias})
+class ExcluirDespesaView(View):
     template_name='despesas/excluir_despesa.html'
     def get(self,request,pk):
-        despesa = Despesa.objects.get(pk=pk)
-        return render(request,self.template_name,{'despesa':despesa})
-    def post(self,request,pk)
-        despesa = Despesa.objects.get(pk=pk)
+        despesa =   Despesa.objects.get(pk=pk)
+        return render (request,self.template_name,{'despesa':despesa})
+    def post(self,request,pk):
+        despesa =   Despesa.objects.get(pk=pk)
         despesa.delete()
         return redirect('lista_despesas')
 
