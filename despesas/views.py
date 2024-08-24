@@ -4,11 +4,22 @@ from .models import Categoria, Despesa
 from .forms import CategoriaForm, DespesaForm
 from django.shortcuts import render,redirect
 from django.db.models import Sum
-
-class EstatisticasView(View):
-    template_name='despesa/estatisticas.html'
+import json
+class EstatisticaView(View):
+    template_name='despesas/estatisticas.html'
     def get(self,request):
-        estatisticas = Despesa.objects.filter(usuario=request.user).values('categoria_nome').annotate(total=Sum('valor'))
+        estatisticas = Despesa.objects.filter(usuario=request.user).values('categoria__nome').annotate(total=Sum('valor'))
+        total_valores = Despesa.objects.filter(usuario= request.user).aggregate(total=Sum('valor'))['total']
+        categorias = [estatistica['categoria__nome'] for estatistica in estatisticas]
+        valores= [float(estatistica['total']) for estatistica in estatisticas]
+        categorias_django= json.dumps(categorias)
+        valores_django = json.dumps(valores)
+        context = {
+            'categorias_django':categorias_django,
+            'valores_django':valores_django,
+            'total_despesas':total_valores,
+        } 
+        return render (request,self.template_name,context)
 
 class EditarDespesaView(View):
     template_name = 'despesas/editar_despesa.html'
