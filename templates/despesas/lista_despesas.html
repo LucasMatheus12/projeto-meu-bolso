@@ -6,40 +6,40 @@
             <div>
                 <table class="table table-striped">
                     <thead>
-                        <tr>
+                       <tr>
+                        <th>
+                            Despesa
+                        </th>
+                        <th>
+                            Valor
+                        </th>
                             <th>
-                                Despesa
+                                Data
                             </th>
-                            <th>
-                                Valor
-                            </th>
-                                <th>
-                                    Data
-                                </th>
-                        </tr>
+                       </tr>
                     </thead>
                     <tbody>
-             
-
                         <tr>
                             {% for despesa in despesas %}
-                            <th> {{despesa.nome}}</th>
+                            <th> {{despesa.nome}} </th>
                             <th> {{despesa.valor}}</th>
-                            <th>{{despesa.data|date:'d/m/y'}}</th>
+                            <th> {{despesa.data|date:'d/m/y'}} </th>
                             <th> 
-                                <a href="{% url 'editar_despesa' despesa.pk' %}">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a> 
+                                <a href="{% url 'editar_despesa' despesa.pk %}"> 
+                                    <i class="bi bi-pencil-square"></i> 
+                                 </a> 
                             </th>
-                            <th>
-                            <a href="{% url 'excluir_despesa' despesa.id %}"><th>
-                                <i class="bi bi-file-x-fill"></i> </th>
+                         <th>  
+                            <a href="{% url 'excluir_despesa' despesa.id %}"> 
+                                <i class="bi bi-file-x-fill"></i> 
                             
-                            </a>
-                        </th>
-                            </tr>
-                            {% endfor %}
+                        </a> 
+                    </th> 
+                        </a>
+                        </tr>
+                        {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
