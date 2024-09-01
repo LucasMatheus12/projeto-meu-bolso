@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load booststrap %}
+{% load bootstrap %}
 {% block content %}
 <div>
     <div class="col-md-8">
         <div>
             <form action="" method="post">
                 {% csrf_token %}
-                {{form|booststrap}}
+                {{form|bootstrap}}
                 <button class="'btn btn-succes btn-lg mt-2 " type="submit"> Editar Despesa </button>
             </form>
         </div>

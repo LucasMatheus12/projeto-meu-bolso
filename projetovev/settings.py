@@ -24,7 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #meus apps
     'despesas',
-    'home'
+    'home', 
+    'bootstrap4',
+    'bootstrapform'
 ]
 
 MIDDLEWARE = [
