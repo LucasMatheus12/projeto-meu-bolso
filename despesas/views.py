@@ -36,7 +36,7 @@ class EditarDespesaView(View):
         categorias = Categoria.objects.filter(usuario = request.user)
         return render (request,self.template_name,{'form':form,'categorias':categorias})
 class ExcluirDespesaView(View):
-    template_name='despesas/excluir_despesa.html'
+    template_name='despesas/excluir_despesas.html'
     def get(self,request,pk):
         despesa =   Despesa.objects.get(pk=pk)
         return render (request,self.template_name,{'despesa':despesa})
