@@ -1,7 +1,11 @@
 from django import forms
 from .models import Categoria,Despesa
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
-
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='Nome de Usuário')
+    password = forms.CharField(label='Senha', widget=forms.PasswordInput)
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria

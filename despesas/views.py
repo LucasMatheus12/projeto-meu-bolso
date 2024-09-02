@@ -4,7 +4,23 @@ from .models import Categoria, Despesa
 from .forms import CategoriaForm, DespesaForm
 from django.shortcuts import render,redirect
 from django.db.models import Sum
+from django.contrib.auth import authenticate, login
+from .forms import LoginForm
 import json
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('lista_despesas')
+    else:
+        form = LoginForm()
+    return render(request, 'usuarios/login.html', {'form': form})
 class EstatisticaView(View):
     template_name='despesas/estatisticas.html'
     def get(self,request):
