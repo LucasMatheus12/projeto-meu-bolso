@@ -12,6 +12,9 @@ SECRET_KEY = config("SECRET_KEY", "")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = 'lista_despesas'
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Application definition
 
@@ -27,6 +30,7 @@ INSTALLED_APPS = [
     'home', 
     'bootstrap4',
     'bootstrapform'
+    
 ]
 
 MIDDLEWARE = [
@@ -93,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
