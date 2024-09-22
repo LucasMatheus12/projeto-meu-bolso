@@ -36,14 +36,14 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, "Login realizado com sucesso!")
                 return redirect('lista_despesas')
             else:
-                messages.error(request, "Usuário ou senha incorretos.")
+                messages.error(request, 'Usuário ou senha incorretos.')
         else:
-            messages.error(request, "Erro ao validar o formulário.")
+            messages.error(request, 'Erro no formulário. Verifique os dados e tente novamente.')
     else:
         form = LoginForm()
+    
     return render(request, 'despesas/login.html', {'form': form})
 
 
