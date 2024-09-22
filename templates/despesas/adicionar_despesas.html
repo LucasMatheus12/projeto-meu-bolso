@@ -1,13 +1,24 @@
 {% extends 'base.html' %}
-{% load bootstrap  %}
+{% load bootstrap %}
 {% block content %}
 <div>
-    <div class="col-md-8" >
+    <div class="col-md-8">
+        <!-- Exibir mensagens -->
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <div>
             <form action="" method="post">
                 {% csrf_token %}
-                {{form|bootstrap}}
-                <button class="btn btn-success mt-2" type="submit"> Adicionar Despesas</button>
+                {{ form|bootstrap }}
+                <button class="btn btn-success mt-2" type="submit">Adicionar Despesas</button>
             </form>
         </div>
     </div>

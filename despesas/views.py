@@ -98,29 +98,34 @@ class ExcluirDespesaView(View):
         return redirect('lista_despesas')
 
 
-class AdicionarDespesaView(View):
-    template_name = 'despesas/adicionar_despesas.html'
+from django.contrib import messages
 
+class AdicionarDespesaView(View):
+    template_name= 'despesas/adicionar_despesas.html'
+    
     def get(self, request):
-        form = DespesaForm(user=request.user)
         categorias = Categoria.objects.filter(usuario=request.user)
+        form = DespesaForm(user=request.user)
         context = {
-            'form': form,
             'categorias': categorias,
+            'form': form,
         }
         return render(request, self.template_name, context)
-
+    
     def post(self, request):
         form = DespesaForm(request.user, request.POST)
         if form.is_valid():
             despesa = form.save(commit=False)
             despesa.usuario = request.user
             despesa.save()
-            messages.success(request, "Despesa adicionada com sucesso!")
+            messages.success(request, 'Despesa adicionada com sucesso!')
             return redirect('lista_despesas')
-        messages.error(request, "Erro ao adicionar a despesa.")
+        else:
+            messages.error(request, 'Erro ao adicionar despesa. Por favor, corrija os erros e tente novamente.')
+        
         categorias = Categoria.objects.filter(usuario=request.user)
-        return render(request, self.template_name, {'form': form, 'categorias': categorias})
+        return render(request, self.template_name, {'categorias': categorias, 'form': form})
+
 
 
 class ListaDespesasView(View):
