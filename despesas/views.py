@@ -8,6 +8,25 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 import json
 
+from django.contrib.auth.decorators import login_required
+
+from .forms import RegistroForm
+
+def registrar_view(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) 
+            return redirect('lista_despesas')  
+    else:
+        form = RegistroForm()
+    return render(request, 'despesas/registrar.html', {'form': form})
+
+@login_required
+def pagina_inicial(request):
+    return render(request, 'despesas/login.html')
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -20,7 +39,7 @@ def login_view(request):
                 return redirect('lista_despesas')
     else:
         form = LoginForm()
-    return render(request, 'usuarios/login.html', {'form': form})
+    return render(request, 'despesas/login.html', {'form': form})
 class EstatisticaView(View):
     template_name='despesas/estatisticas.html'
     def get(self,request):
