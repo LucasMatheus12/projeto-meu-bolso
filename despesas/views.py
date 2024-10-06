@@ -175,3 +175,10 @@ class AdicionarDepositoView(View):
 
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'form': form, 'categorias': categorias})
+    
+class ListaDepositosView(View):
+    template_name = 'despesas/lista_depositos.html'
+
+    def get(self, request):
+        depositos = Deposito.objects.filter(usuario=request.user)
+        return render(request, self.template_name, {'depositos': depositos})
