@@ -4,10 +4,9 @@ from django.db.models import Sum
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Categoria, Despesa
-from .forms import CategoriaForm, DespesaForm, LoginForm, RegistroForm
+from .models import Categoria, Despesa, Deposito
+from .forms import CategoriaForm, DespesaForm, LoginForm, RegistroForm,DepositoForm
 import json
-
 
 def registrar_view(request):
     if request.method == 'POST':
@@ -154,3 +153,25 @@ class GerenciarCategoriaView(View):
         messages.error(request, "Erro ao adicionar a categoria.")
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'categorias': categorias, 'form': form})
+
+class AdicionarDepositoView(View):
+    template_name = 'despesas/adicionar_deposito.html'
+
+    def get(self, request):
+        form = DepositoForm(user=request.user)
+        categorias = Categoria.objects.filter(usuario=request.user)
+        return render(request, self.template_name, {'form': form, 'categorias': categorias})
+
+    def post(self, request):
+        form = DepositoForm(request.user, request.POST)
+        if form.is_valid():
+            deposito = form.save(commit=False)
+            deposito.usuario = request.user
+            deposito.save()
+            messages.success(request, 'Depósito adicionado com sucesso!')
+            return redirect('lista_depositos') 
+        else:
+            messages.error(request, 'Erro ao adicionar depósito. Por favor, corrija os erros e tente novamente.')
+
+        categorias = Categoria.objects.filter(usuario=request.user)
+        return render(request, self.template_name, {'form': form, 'categorias': categorias})
