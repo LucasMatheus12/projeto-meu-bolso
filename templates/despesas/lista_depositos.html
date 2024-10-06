@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Lista de Depósitos</h2>
+  <ul>
+    {% for deposito in depositos %}
+      <li>{{ deposito.descricao }} - {{ deposito.valor }} - {{ deposito.data }}</li>
+    {% empty %}
+      <li>Nenhum depósito encontrado.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
