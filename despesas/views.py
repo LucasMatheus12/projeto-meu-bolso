@@ -63,7 +63,6 @@ class EstatisticaView(View):
         }
         return render(request, self.template_name, context)
 
-
 class EditarDespesaView(View):
     template_name = 'despesas/editar_despesa.html'
 
@@ -158,12 +157,12 @@ class AdicionarDepositoView(View):
     template_name = 'despesas/adicionar_deposito.html'
 
     def get(self, request):
-        form = DepositoForm(user=request.user)
+        form = DepositoForm(user=request.user)  # Passando o usuário
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'form': form, 'categorias': categorias})
 
     def post(self, request):
-        form = DepositoForm(request.user, request.POST)
+        form = DepositoForm(user=request.user, data=request.POST)  # Corrigido para usar 'data' em vez de 'request.POST'
         if form.is_valid():
             deposito = form.save(commit=False)
             deposito.usuario = request.user
@@ -175,6 +174,7 @@ class AdicionarDepositoView(View):
 
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'form': form, 'categorias': categorias})
+
     
 class ListaDepositosView(View):
     template_name = 'despesas/lista_depositos.html'
