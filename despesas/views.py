@@ -51,16 +51,25 @@ class EstatisticaView(View):
 
     def get(self, request):
         estatisticas = Despesa.objects.filter(usuario=request.user).values('categoria__nome').annotate(total=Sum('valor'))
-        total_valores = Despesa.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total']
+        total_valores = Despesa.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total'] or 0
+        
+        total_depositos = Deposito.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total'] or 0
+        
         categorias = [estatistica['categoria__nome'] for estatistica in estatisticas]
         valores = [float(estatistica['total']) for estatistica in estatisticas]
+        
+        categorias.append('Depósitos')
+        valores.append(float(total_depositos))
+        
         categorias_django = json.dumps(categorias)
         valores_django = json.dumps(valores)
+        
         context = {
             'categorias_django': categorias_django,
             'valores_django': valores_django,
             'total_despesas': total_valores,
         }
+        
         return render(request, self.template_name, context)
 
 class EditarDespesaView(View):
