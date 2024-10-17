@@ -164,7 +164,7 @@ class GerenciarCategoriaView(View):
         return render(request, self.template_name, {'categorias': categorias, 'form': form})
 
 class AdicionarDepositoView(View):
-    template_name = 'despesas/adicionar_deposito.html'
+    template_name = 'depositos/adicionar_deposito.html'
 
     def get(self, request):
         form = DepositoForm(user=request.user) 
@@ -187,13 +187,13 @@ class AdicionarDepositoView(View):
 
     
 class ListaDepositosView(View):
-    template_name = 'despesas/lista_depositos.html'
+    template_name = 'depositos/lista_depositos.html'
 
     def get(self, request):
         depositos = Deposito.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'depositos': depositos})
 class EditarDepositoView(View):
-    template_name = 'despesas/editar_deposito.html'
+    template_name = 'depositos/editar_deposito.html'
 
     def get(self, request, pk):
         deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
@@ -212,7 +212,7 @@ class EditarDepositoView(View):
 
 
 class ExcluirDepositoView(View):
-    template_name = 'despesas/excluir_deposito.html'
+    template_name = 'depositos/excluir_deposito.html'
 
     def get(self, request, pk):
         deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
