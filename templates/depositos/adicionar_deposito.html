@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% block content %}
+<div>
+    <div class="col-md-8">
+        <div>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form|bootstrap }}
+                <button class="btn btn-success mt-2" type="submit">Adicionar Depósito</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

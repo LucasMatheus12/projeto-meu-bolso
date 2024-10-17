@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Categoria, Despesa, Deposito
 from .forms import CategoriaForm, DespesaForm, LoginForm, RegistroForm,DepositoForm
+from django.utils.decorators import method_decorator
 import json
 
 def registrar_view(request):
@@ -163,15 +164,15 @@ class GerenciarCategoriaView(View):
         return render(request, self.template_name, {'categorias': categorias, 'form': form})
 
 class AdicionarDepositoView(View):
-    template_name = 'despesas/adicionar_deposito.html'
+    template_name = 'depositos/adicionar_deposito.html'
 
     def get(self, request):
-        form = DepositoForm(user=request.user)  # Passando o usuário
+        form = DepositoForm(user=request.user) 
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'form': form, 'categorias': categorias})
 
     def post(self, request):
-        form = DepositoForm(user=request.user, data=request.POST)  # Corrigido para usar 'data' em vez de 'request.POST'
+        form = DepositoForm(user=request.user, data=request.POST)  
         if form.is_valid():
             deposito = form.save(commit=False)
             deposito.usuario = request.user
@@ -186,8 +187,39 @@ class AdicionarDepositoView(View):
 
     
 class ListaDepositosView(View):
-    template_name = 'despesas/lista_depositos.html'
+    template_name = 'depositos/lista_depositos.html'
 
     def get(self, request):
         depositos = Deposito.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'depositos': depositos})
+class EditarDepositoView(View):
+    template_name = 'depositos/editar_deposito.html'
+
+    def get(self, request, pk):
+        deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
+        form = DepositoForm(user=request.user, instance=deposito)  
+        return render(request, self.template_name, {'form': form, 'deposito': deposito})
+
+    def post(self, request, pk):
+        deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
+        form = DepositoForm(user=request.user, data=request.POST, instance=deposito)  
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Depósito atualizado com sucesso!")
+            return redirect('lista_depositos')
+        messages.error(request, "Erro ao atualizar o depósito.")
+        return render(request, self.template_name, {'form': form, 'deposito': deposito})
+
+
+class ExcluirDepositoView(View):
+    template_name = 'depositos/excluir_deposito.html'
+
+    def get(self, request, pk):
+        deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
+        return render(request, self.template_name, {'deposito': deposito})
+
+    def post(self, request, pk):
+        deposito = get_object_or_404(Deposito, pk=pk, usuario=request.user)
+        deposito.delete()
+        messages.success(request, 'Depósito excluído com sucesso!')
+        return redirect('lista_depositos')

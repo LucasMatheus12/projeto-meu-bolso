@@ -42,7 +42,9 @@ class DepositoForm(forms.ModelForm):
     class Meta:
         model = Deposito
         fields = ['categoria', 'valor', 'data', 'descricao']
-
+        widgets={
+            'data':forms.DateInput(attrs={'type':'date'})
+        }
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['categoria'].queryset = Categoria.objects.filter(usuario=user)
