@@ -1,12 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Lista de Depósitos</h2>
-  <ul>
-    {% for deposito in depositos %}
-      <li>{{ deposito.descricao }} - {{ deposito.valor }} - {{ deposito.data }}</li>
-    {% empty %}
-      <li>Nenhum depósito encontrado.</li>
-    {% endfor %}
-  </ul>
+<div>
+    <div>
+        <div>
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                       <tr>
+                        <th>
+                            Descrição
+                        </th>
+                        <th>
+                            Valor
+                        </th>
+                        <th>
+                            Data
+                        </th>
+                        <th>
+                            Ações
+                        </th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                        {% for deposito in depositos %}
+                        <tr>
+                            <td>{{ deposito.descricao }}</td>
+                            <td>{{ deposito.valor }}</td>
+                            <td>{{ deposito.data|date:"d/m/Y" }}</td>
+                            <td> 
+                                <a href="{% url 'editar_deposito' deposito.pk %}"> 
+                                    <i class="bi bi-pencil-square"></i> 
+                                </a> 
+                                <a href="{% url 'excluir_deposito' deposito.pk %}">
+                                    <i class="bi bi-file-x-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">Nenhum depósito encontrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
