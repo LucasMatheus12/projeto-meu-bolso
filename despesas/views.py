@@ -145,7 +145,7 @@ class ListaDespesasView(View):
 
 
 class GerenciarCategoriaView(View):
-    template_name = 'despesas/gerenciar_categorias.html'
+    template_name = 'categorias/gerenciar_categorias.html'
 
     def get(self, request):
         categorias = Categoria.objects.filter(usuario=request.user)
@@ -162,6 +162,37 @@ class GerenciarCategoriaView(View):
         messages.error(request, "Erro ao adicionar a categoria.")
         categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'categorias': categorias, 'form': form})
+
+class EditarCategoriaView(View):
+    template_name = 'categorias/editar_categoria.html'
+
+    def get(self, request, pk):
+        categoria = get_object_or_404(Categoria, pk=pk, usuario=request.user)
+        form = CategoriaForm(instance=categoria)
+        return render(request, self.template_name, {'form': form, 'categoria': categoria})
+
+    def post(self, request, pk):
+        categoria = get_object_or_404(Categoria, pk=pk, usuario=request.user)
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Categoria atualizada com sucesso!")
+            return redirect('gerenciar_categorias')
+        messages.error(request, "Erro ao atualizar a categoria.")
+        return render(request, self.template_name, {'form': form, 'categoria': categoria})
+
+class ExcluirCategoriaView(View):
+    template_name = 'categorias/excluir_categoria.html'
+
+    def get(self, request, pk):
+        categoria = get_object_or_404(Categoria, pk=pk, usuario=request.user)
+        return render(request, self.template_name, {'categoria': categoria})
+
+    def post(self, request, pk):
+        categoria = get_object_or_404(Categoria, pk=pk, usuario=request.user)
+        categoria.delete()
+        messages.success(request, "Categoria excluída com sucesso!")
+        return redirect('lista_categorias')
 
 class AdicionarDepositoView(View):
     template_name = 'depositos/adicionar_deposito.html'

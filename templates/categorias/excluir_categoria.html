@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Excluir Categoria</h2>
+    <div class="alert alert-warning">
+        <p><strong>Atenção!</strong> Esta ação não pode ser desfeita.</p>
+    </div>
+
+    <p>Tem certeza que deseja excluir a categoria "<strong>{{ categoria.nome }}</strong>"?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta categoria?');">Confirmar</button>
+        <a href="{% url 'gerenciar_categorias' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
