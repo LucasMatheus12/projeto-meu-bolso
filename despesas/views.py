@@ -46,6 +46,18 @@ def login_view(request):
     
     return render(request, 'despesas/login.html', {'form': form})
 
+class RegistroView(View):
+    def get(self, request):
+        form = RegistroForm()
+        return render(request, 'registro.html', {'form': form})
+
+    def post(self, request):
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registro realizado com sucesso! Você pode fazer login agora.')
+            return redirect('login')
+        return render(request, 'registro.html', {'form': form})
 
 class EstatisticaView(View):
     template_name = 'despesas/estatisticas.html'

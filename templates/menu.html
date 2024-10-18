@@ -1,31 +1,34 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
+  <div class="container">
       <a class="navbar-brand" href="#">Despesas App</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'estatisticas' %}" >Estatísticas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'adicionar_despesas'%}" >Adicionar Despesa</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'lista_despesas'%}">Lista de Despesas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'adicionar_deposito'%}">Adicionar deposito</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'lista_depositos'%}">Lista deposito</a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'gerenciar_categorias' %}">Gerenciar Categorias</a>
-          </li>
-        </ul>
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'estatisticas' %}">Estatísticas</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'adicionar_despesas' %}">Adicionar Despesa</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'lista_despesas' %}">Lista de Despesas</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'adicionar_deposito' %}">Adicionar Depósito</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'lista_depositos' %}">Lista de Depósitos</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'gerenciar_categorias' %}">Gerenciar Categorias</a>
+              </li>
+          </ul>
+          <div class="ms-auto d-flex align-items-center text-white"> 
+              <i class="bi bi-person-circle me-2"></i> 
+              {{ request.user.username }} 
+          </div>
       </div>
-    </div>
-  </nav>
+  </div>
+</nav>
