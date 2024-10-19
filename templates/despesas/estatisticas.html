@@ -4,46 +4,62 @@
     <h1 style="font-family: 'Comic Sans MS', cursive;">Estatísticas</h1>
 
     <div class="row">
-      <div class="col-md-6">
-        <h3>Total de Despesas: R$ {{ total_despesas }}</h3>
-        <h3 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
-          <i class="bi bi-person-circle"></i>   {{ request.user }}
-        </h3>
-      </div>
+        <div class="col-md-6">
+            <h3>Total de Despesas: R$ {{ total_despesas }}</h3>
+            <h3>Total de Deposito: R$ {{ total_depositos }}</h3>
+            <h3 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                <i class="bi bi-person-circle"></i> {{ request.user }}
+            </h3>
+        </div>
     </div>
 
     <div class="row">
-      <div class="col-md-8 mx-auto">
-        <canvas id="grafico"></canvas>
-      </div>
+        <div class="col-md-8 mx-auto">
+            <canvas id="grafico" style="max-width: 100%;"></canvas>
+        </div>
     </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const categorias = {{ categorias_django|safe }};
-      const valores = {{ valores_django|safe }};
-      const cores = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)'];
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorias = {{ categorias_django|safe }};
+            const valores = {{ valores_django|safe }};
+            const cores = categorias.map(function(categoria) {
+                return categoria === 'Depósitos' ? 'rgba(75, 192, 75, 0.6)' : 'rgba(255, 99, 132, 0.6)'; // Verde para depósitos, vermelho para despesas
+            });
 
-      const ctx = document.getElementById('grafico').getContext('2d');
-      const datasets = [{
-        label: 'Total por Categoria',
-        data: valores,
-        backgroundColor: cores.slice(0, valores.length),
-        borderColor: cores,
-        borderWidth: 1
-      }];
+            const ctx = document.getElementById('grafico').getContext('2d');
+            const datasets = [{
+                label: 'Total por Categoria',
+                data: valores,
+                backgroundColor: cores,
+                borderColor: cores.map(function(cor) {
+                    return cor.replace('0.6', '1'); // Aumenta a opacidade para a borda
+                }),
+                borderWidth: 1
+            }];
 
-      const myChart = new Chart(ctx, {
-        type: 'pie',
-        data: { labels: categorias, datasets: datasets },
-        options: {
-          scales: { y: { beginAtZero: true, max: 100 } },
-          plugins: {
-            legend: { display: true, position: 'top' },
-            tooltip: { callbacks: { label: function (context) { return context.label + ': R$ ' + context.formattedValue; } } }
-          }
-        }
-      });
-    });
-  </script>
+            const myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categorias,
+                    datasets: datasets
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.label + ': R$ ' + context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
