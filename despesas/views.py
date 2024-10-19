@@ -7,7 +7,27 @@ from django.contrib import messages
 from .models import Categoria, Despesa, Deposito
 from .forms import CategoriaForm, DespesaForm, LoginForm, RegistroForm,DepositoForm
 from django.utils.decorators import method_decorator
+from django.contrib.auth import logout
+from .forms import LoginForm 
 import json
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('lista_despesas')
+            else:
+                messages.error(request, 'Credenciais inválidas. Verifique seu nome de usuário e senha.') 
+        else:
+            messages.error(request, 'Erro no formulário. Verifique os dados e tente novamente.')
+    else:
+        form = LoginForm()  
+    
+    return render(request, 'despesas/login.html', {'form': form})  
 
 def registrar_view(request):
     if request.method == 'POST':
@@ -27,25 +47,6 @@ def pagina_inicial(request):
     return render(request, 'despesas/login.html')
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('lista_despesas')
-            else:
-                messages.error(request, 'Usuário ou senha incorretos.')
-        else:
-            messages.error(request, 'Erro no formulário. Verifique os dados e tente novamente.')
-    else:
-        form = LoginForm()
-    
-    return render(request, 'despesas/login.html', {'form': form})
-
 class RegistroView(View):
     def get(self, request):
         form = RegistroForm()
@@ -59,31 +60,37 @@ class RegistroView(View):
             return redirect('login')
         return render(request, 'registro.html', {'form': form})
 
+class LogoutView(View):
+    def post(self, request):
+        logout(request)
+        messages.success(request, "Logout realizado com sucesso.")
+        return redirect('login')
+
 class EstatisticaView(View):
     template_name = 'despesas/estatisticas.html'
 
     def get(self, request):
-        estatisticas = Despesa.objects.filter(usuario=request.user).values('categoria__nome').annotate(total=Sum('valor'))
-        total_valores = Despesa.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total'] or 0
-        
         total_depositos = Deposito.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total'] or 0
-        
-        categorias = [estatistica['categoria__nome'] for estatistica in estatisticas]
-        valores = [float(estatistica['total']) for estatistica in estatisticas]
-        
-        categorias.append('Depósitos')
-        valores.append(float(total_depositos))
+        total_despesas = Despesa.objects.filter(usuario=request.user).aggregate(total=Sum('valor'))['total'] or 0
+
+       
+        categorias = ['Total de Despesas', 'Depósitos']
+        valores = [float(total_despesas), float(total_depositos)]
+
         
         categorias_django = json.dumps(categorias)
         valores_django = json.dumps(valores)
+
         
         context = {
             'categorias_django': categorias_django,
             'valores_django': valores_django,
-            'total_despesas': total_valores,
+            'total_despesas': total_despesas,
+            'total_depositos': total_depositos,  
         }
-        
+
         return render(request, self.template_name, context)
+
 
 class EditarDespesaView(View):
     template_name = 'despesas/editar_despesa.html'
@@ -158,22 +165,29 @@ class ListaDespesasView(View):
 
 class GerenciarCategoriaView(View):
     template_name = 'categorias/gerenciar_categorias.html'
-
     def get(self, request):
         categorias = Categoria.objects.filter(usuario=request.user)
+        if not categorias:
+            messages.info(request, 'Nenhuma categoria encontrada.')
         return render(request, self.template_name, {'categorias': categorias})
-
+     
     def post(self, request):
         form = CategoriaForm(request.POST)
+        categorias = Categoria.objects.filter(usuario=request.user)
         if form.is_valid():
+            if Categoria.objects.filter(nome=form.cleaned_data['nome'], usuario=request.user).exists():
+                messages.error(request, "Categoria com nome duplicado.")
+                return render(request, self.template_name, {'categorias': categorias, 'form': form}, status=400)
+
             categoria = form.save(commit=False)
             categoria.usuario = request.user
             categoria.save()
             messages.success(request, "Categoria adicionada com sucesso!")
             return redirect('gerenciar_categorias')
+
         messages.error(request, "Erro ao adicionar a categoria.")
-        categorias = Categoria.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'categorias': categorias, 'form': form})
+
 
 class EditarCategoriaView(View):
     template_name = 'categorias/editar_categoria.html'
@@ -204,7 +218,7 @@ class ExcluirCategoriaView(View):
         categoria = get_object_or_404(Categoria, pk=pk, usuario=request.user)
         categoria.delete()
         messages.success(request, "Categoria excluída com sucesso!")
-        return redirect('lista_categorias')
+        return redirect('gerenciar_categorias')
 
 class AdicionarDepositoView(View):
     template_name = 'depositos/adicionar_deposito.html'
@@ -266,3 +280,4 @@ class ExcluirDepositoView(View):
         deposito.delete()
         messages.success(request, 'Depósito excluído com sucesso!')
         return redirect('lista_depositos')
+

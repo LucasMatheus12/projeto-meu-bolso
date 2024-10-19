@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegistroView, GerenciarCategoriaView,EditarCategoriaView,ExcluirCategoriaView, EditarDepositoView,ExcluirDepositoView,ListaDespesasView,AdicionarDespesaView,ExcluirDespesaView,EditarDespesaView,EstatisticaView,AdicionarDepositoView,ListaDepositosView
+from .views import RegistroView,LogoutView, GerenciarCategoriaView,EditarCategoriaView,ExcluirCategoriaView, EditarDepositoView,ExcluirDepositoView,ListaDespesasView,AdicionarDespesaView,ExcluirDespesaView,EditarDespesaView,EstatisticaView,AdicionarDepositoView,ListaDepositosView
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -20,6 +20,6 @@ urlpatterns=[
     path('lista-depositos/', ListaDepositosView.as_view(), name='lista_depositos'),
     path('despositos/editar/<int:pk>/', EditarDepositoView.as_view(), name='editar_deposito'),
     path('depositos/excluir/<int:pk>/', ExcluirDepositoView.as_view(), name='excluir_deposito'),
-
+    path('logout/', LogoutView.as_view(), name='logout'),  # Use a LogoutView que você definiu
 
 ]

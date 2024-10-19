@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import Categoria, Despesa, Deposito
 from .forms import RegistroForm, LoginForm
-
-# Testes de Modelos
+from datetime import date 
+from django.contrib.staticfiles.testing import LiveServerTestCase
+from selenium import webdriver
+from django.core.exceptions import ValidationError
+# --------- TESTES DE MODELOS ---------
 
 class CategoriaModelTest(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
 
@@ -31,7 +33,6 @@ class CategoriaModelTest(TestCase):
 
 
 class DespesaModelTest(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.categoria = Categoria.objects.create(nome='Saúde', usuario=self.user)
@@ -50,9 +51,25 @@ class DespesaModelTest(TestCase):
         self.assertEqual(despesa.categoria, self.categoria)
         self.assertEqual(despesa.usuario, self.user)
 
+    def test_despesa_valor_negativo(self):
+        despesa = Despesa(valor=-50)  # Valor negativo
+        with self.assertRaises(ValidationError):
+            despesa.clean()  # Deve levantar ValidationError
+
+    def test_despesa_data_futura(self):
+        data_futura = date.today().replace(year=date.today().year + 1)
+        despesa = Despesa.objects.create(
+            nome='Consulta médica',
+            descricao='Consulta de rotina',
+            data=data_futura,
+            categoria=self.categoria,
+            valor=250.00,
+            usuario=self.user
+        )
+        self.assertEqual(despesa.data, data_futura)
+
 
 class DepositoModelTest(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.categoria = Categoria.objects.create(nome='Investimentos', usuario=self.user)
@@ -70,10 +87,15 @@ class DepositoModelTest(TestCase):
         self.assertEqual(deposito.categoria, self.categoria)
         self.assertEqual(deposito.usuario, self.user)
 
-# Testes de Views
+    def test_deposito_valor_negativo(self):
+        deposito = Deposito(valor=-100)  # Valor negativo
+        with self.assertRaises(ValidationError):
+            deposito.clean()  # Deve levantar ValidationError
+
+
+# --------- TESTES DE VIEWS ---------
 
 class AuthViewsTest(TestCase):
-
     def test_registrar_view(self):
         response = self.client.get(reverse('registrar'))
         self.assertEqual(response.status_code, 200)
@@ -90,20 +112,27 @@ class AuthViewsTest(TestCase):
         response = self.client.post(reverse('login'), data=login_data)
         self.assertRedirects(response, reverse('lista_despesas'))
 
-# Testes de Formulários
+    def test_login_incorreto(self):
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'senhaerrada'})
+        self.assertEqual(response.status_code, 200)  
+
+    def test_logout_view(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('logout'))
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+
+# --------- TESTES DE FORMULÁRIOS ---------
 
 class RegistroFormTest(TestCase):
-
     def test_valid_form(self):
         form_data = {
             'username': 'testuser',
-            'email': 'testuser@example.com',  # Incluindo o email
+            'email': 'testuser@example.com', 
             'password1': 'strongpassword123',
             'password2': 'strongpassword123',
         }
         form = RegistroForm(data=form_data)
-        if not form.is_valid():
-            print(form.errors)  # Exibe os erros do formulário, se houver
         self.assertTrue(form.is_valid())
 
     def test_invalid_form(self):
@@ -117,21 +146,62 @@ class RegistroFormTest(TestCase):
 
 
 class LoginFormTest(TestCase):
-
     def test_valid_login(self):
         user = User.objects.create_user(username='testuser', password='12345')
-        form_data = {
-            'username': 'testuser',
-            'password': '12345',
-        }
+        form_data = {'username': 'testuser', 'password': '12345'}
         form = LoginForm(data=form_data)
         self.assertTrue(form.is_valid())
 
     def test_invalid_login(self):
-        form_data = {
-            'username': 'testuser',
-            'password': 'wrongpassword',
-        }
+        form_data = {'username': 'testuser', 'password': 'wrongpassword'}
         form = LoginForm(data=form_data)
         self.assertFalse(form.is_valid())
 
+
+# --------- TESTES DE INTEGRAÇÃO ---------
+
+class AuthIntegrationTestCase(TestCase):
+    def test_registro_e_login(self):
+        response = self.client.post(reverse('registrar'), {
+            'username': 'testuser',
+            'email': 'testuser@example.com',
+            'password1': 'strongpassword123',
+            'password2': 'strongpassword123',
+        })
+        self.assertEqual(response.status_code, 302)  
+
+        login_data = {'username': 'testuser', 'password': 'strongpassword123'}
+        response = self.client.post(reverse('login'), data=login_data)
+        self.assertRedirects(response, reverse('lista_despesas'))  
+
+    def test_login_com_usuario_inexistente(self):
+        login_data = {'username': 'usuario_inexistente', 'password': 'senhaerrada'}
+        response = self.client.post(reverse('login'), data=login_data)
+        self.assertEqual(response.status_code, 200) 
+
+
+class CategoriaIntegrationTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+    def test_categoria_criacao_e_listagem(self):
+        response = self.client.post(reverse('gerenciar_categorias'), {'nome': 'Transporte'})
+        self.assertEqual(response.status_code, 302)  
+
+        response = self.client.get(reverse('gerenciar_categorias'))
+        self.assertContains(response, 'Transporte')
+
+
+# --------- TESTES SELENIUM ---------
+
+class SistemaAuthTestCase(LiveServerTestCase):
+    def setUp(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        self.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    def tearDown(self):
+        self.browser.quit()
