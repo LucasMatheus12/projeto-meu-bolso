@@ -29,11 +29,11 @@
                             <td>{{ deposito.valor }}</td>
                             <td>{{ deposito.data|date:"d/m/Y" }}</td>
                             <td> 
-                                <a href="{% url 'editar_deposito' deposito.pk %}"> 
-                                    <i class="bi bi-pencil-square"></i> 
+                                <a href="{% url 'editar_deposito' deposito.pk %}" class="btn btn-warning"> 
+                                    <i class="bi bi-pencil-square"></i> Editar
                                 </a> 
-                                <a href="{% url 'excluir_deposito' deposito.pk %}">
-                                    <i class="bi bi-file-x-fill"></i>
+                                <a href="{% url 'excluir_deposito' deposito.pk %}" class="btn btn-danger">
+                                    <i class="bi bi-file-x-fill"></i> Excluir
                                 </a>
                             </td>
                         </tr>

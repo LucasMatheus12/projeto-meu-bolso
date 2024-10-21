@@ -5,8 +5,9 @@
 
     <div class="row">
         <div class="col-md-6">
-            <h3>Total de Despesas: R$ {{ total_despesas }}</h3>
-            <h3>Total de Deposito: R$ {{ total_depositos }}</h3>
+            <h3>Total de Despesas: R$ {{ total_despesas|floatformat:2 }}</h3>
+            <h3>Total de Depósito: R$ {{ total_depositos|floatformat:2 }}</h3>
+
             <h3 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
                 <i class="bi bi-person-circle"></i> {{ request.user }}
             </h3>
