@@ -25,10 +25,16 @@
                   <a class="nav-link" href="{% url 'gerenciar_categorias' %}">Gerenciar Categorias</a>
               </li>
           </ul>
-          <div class="ms-auto d-flex align-items-center text-white"> 
-              <i class="bi bi-person-circle me-2"></i> 
-              {{ request.user.username }} 
-          </div>
+          <div class="ms-auto d-flex align-items-center text-white dropdown">
+            <i class="bi bi-person-circle me-2"></i>
+            <a href="#" class="text-white dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                {{ request.user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="{% url 'login' %}">Logout</a></li>
+            </ul>
+        </div>
+        
       </div>
   </div>
 </nav>

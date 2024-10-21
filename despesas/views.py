@@ -165,12 +165,14 @@ class ListaDespesasView(View):
 
 class GerenciarCategoriaView(View):
     template_name = 'categorias/gerenciar_categorias.html'
+
     def get(self, request):
         categorias = Categoria.objects.filter(usuario=request.user)
+        form = CategoriaForm()  # Certifique-se de instanciar o formulário
         if not categorias:
             messages.info(request, 'Nenhuma categoria encontrada.')
-        return render(request, self.template_name, {'categorias': categorias})
-     
+        return render(request, self.template_name, {'categorias': categorias, 'form': form})  # Passe o formulário no contexto
+
     def post(self, request):
         form = CategoriaForm(request.POST)
         categorias = Categoria.objects.filter(usuario=request.user)

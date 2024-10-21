@@ -13,9 +13,12 @@
                         <th>
                             Valor
                         </th>
-                            <th>
-                                Data
-                            </th>
+                        <th>
+                            Data
+                        </th>
+                        <th>
+                            Ações
+                        </th>
                        </tr>
                     </thead>
                     <tbody>
@@ -25,13 +28,13 @@
                             <th> {{despesa.valor}}</th>
                             <th> {{despesa.data|date:'d/m/y'}} </th>
                             <th> 
-                                <a href="{% url 'editar_despesa' despesa.pk %}"> 
-                                    <i class="bi bi-pencil-square"></i> 
+                                <a href="{% url 'editar_despesa' despesa.pk %}" class="btn btn-warning"> 
+                                    <i class="bi bi-pencil-square"></i>  Editar
                                  </a> 
+                                 <a href="{% url 'excluir_despesa' despesa.id %}" class="btn btn-danger"> 
+                                     <i class="bi bi-file-x-fill"></i>Excluir
                             </th>
-                         <th>  
-                            <a href="{% url 'excluir_despesa' despesa.id %}"> 
-                                <i class="bi bi-file-x-fill"></i> 
+                          
                             
                         </a> 
                     </th> 
