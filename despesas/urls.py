@@ -20,6 +20,6 @@ urlpatterns=[
     path('lista-depositos/', ListaDepositosView.as_view(), name='lista_depositos'),
     path('despositos/editar/<int:pk>/', EditarDepositoView.as_view(), name='editar_deposito'),
     path('depositos/excluir/<int:pk>/', ExcluirDepositoView.as_view(), name='excluir_deposito'),
-    path('logout/', LogoutView.as_view(), name='logout'),  # Use a LogoutView que você definiu
+    path('logout/', LogoutView.as_view(), name='logout'),  
 
 ]

@@ -25,7 +25,7 @@
             const categorias = {{ categorias_django|safe }};
             const valores = {{ valores_django|safe }};
             const cores = categorias.map(function(categoria) {
-                return categoria === 'Depósitos' ? 'rgba(75, 192, 75, 0.6)' : 'rgba(255, 99, 132, 0.6)'; // Verde para depósitos, vermelho para despesas
+                return categoria === 'Depósitos' ? 'rgba(75, 192, 75, 0.6)' : 'rgba(255, 99, 132, 0.6)'; 
             });
 
             const ctx = document.getElementById('grafico').getContext('2d');
@@ -34,7 +34,7 @@
                 data: valores,
                 backgroundColor: cores,
                 borderColor: cores.map(function(cor) {
-                    return cor.replace('0.6', '1'); // Aumenta a opacidade para a borda
+                    return cor.replace('0.6', '1'); 
                 }),
                 borderWidth: 1
             }];
