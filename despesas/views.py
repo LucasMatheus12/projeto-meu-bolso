@@ -168,10 +168,10 @@ class GerenciarCategoriaView(View):
 
     def get(self, request):
         categorias = Categoria.objects.filter(usuario=request.user)
-        form = CategoriaForm()  # Certifique-se de instanciar o formulário
+        form = CategoriaForm() 
         if not categorias:
             messages.info(request, 'Nenhuma categoria encontrada.')
-        return render(request, self.template_name, {'categorias': categorias, 'form': form})  # Passe o formulário no contexto
+        return render(request, self.template_name, {'categorias': categorias, 'form': form}) 
 
     def post(self, request):
         form = CategoriaForm(request.POST)

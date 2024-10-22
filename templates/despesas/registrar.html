@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <style>
-        /* Reset básico */
         * {
             margin: 0;
             padding: 0;
@@ -13,21 +12,53 @@
         }
 
         body {
+            display: flex;
+            height: 100vh;
             font-family: 'Arial', sans-serif;
+        }
+
+        .left-container {
+            background-color: #0072A3; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .left-container h1 {
+            font-size: 3rem;
+        }
+
+        .right-container {
             background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex: 1;
+        }
+        .right-container h2{
+            color: #0072A3;
+            font-size: 2rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 2.75rem; 
+            letter-spacing: -0.04rem;
         }
 
         .register-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 40px; 
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
         }
 
         h2 {
@@ -41,22 +72,18 @@
             flex-direction: column;
         }
 
-        label {
-            margin-bottom: 5px;
-            color: #333;
-        }
-
         input {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
+            width: 100%;
         }
 
         button {
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #0072A3; 
             color: white;
             border: none;
             border-radius: 4px;
@@ -65,7 +92,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #005f8c; 
         }
 
         .form-footer {
@@ -74,7 +101,7 @@
         }
 
         .form-footer a {
-            color: #4CAF50;
+            color: #0072A3; 
             text-decoration: none;
         }
 
@@ -84,16 +111,55 @@
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <h2>Registro</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Registrar</button>
-        </form>
-        <div class="form-footer">
-            <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login aqui</a></p>
+    <div class="left-container">
+        <h1>Despesas App</h1>
+    </div>
+    <div class="right-container">
+        <div class="register-container">
+            <h2>Registro</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Registrar</button>
+            </form>
+            <div class="form-footer">
+                <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login aqui</a></p>
+            </div>
         </div>
     </div>
+
+    <script>
+         document.addEventListener('DOMContentLoaded', function () {
+        const labels = document.querySelectorAll('label');
+        let passwordFields = 0; 
+        
+        labels.forEach(label => {
+            label.style.display = 'none'; 
+            const input = label.nextElementSibling; 
+            if (input) {
+                if (input.type === 'text') {
+                    input.placeholder = 'Usuário'; 
+                } else if (input.type === 'password') {
+                    passwordFields++;
+                    if (passwordFields === 1) {
+                        input.placeholder = 'Senha'; 
+                    } else if (passwordFields === 2) {
+                        input.placeholder = 'Repita a senha'; 
+                    }
+                } else if (input.type === 'email') {
+                    input.placeholder = 'E-mail'; 
+                }
+            }
+        });
+    });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const li = document.querySelectorAll('li');
+            li.forEach(e => {
+                e.style.display = 'none'; 
+                const input = e.nextElementSibling; 
+            });
+        });
+    </script>
 </body>
 </html>

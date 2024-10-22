@@ -7,9 +7,18 @@
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form|bootstrap }}
-                <button class="btn btn-success mt-2" type="submit">Adicionar Despesas</button>
+                <button class="btn btn-success mt-2" type="submit">Adicionar Despesa</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let labelDescricao = document.querySelector('label[for="id_descricao"]');
+        if (labelDescricao) {
+            labelDescricao.textContent = 'Descrição';
+        }
+    });
+</script>
+
 {% endblock %}
