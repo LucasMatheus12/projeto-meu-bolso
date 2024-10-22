@@ -4,7 +4,7 @@
   <p>Tem certeza que deseja excluir o depósito "{{ deposito.descricao }}" no valor de {{ deposito.valor }}?</p>
   <form method="POST">
     {% csrf_token %}
-    <button type="submit">Confirmar</button>
-    <a href="{% url 'lista_depositos' %}">Cancelar</a>
+    <button type="submit" class="btn btn-danger">Confirmar</button>
+    <a href="{% url 'lista_depositos' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 {% endblock %}

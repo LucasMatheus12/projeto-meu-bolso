@@ -2,11 +2,12 @@
 {% block content %}
 <div>
     <div>
-        <h2> OLÁ {{request.user}} VOCE QUER EXCLUIR A DESPESA ? </h2>
-        <h3> {{despesa.nome}} Criada em {{despesa.data|date:'d/m/y'}}</h3>
+        <h2>Excluir Despesa </h2>
+        <p>Tem certeza que deseja excluir a despesa "{{ despesa.descricao }}" no valor de {{ despesa.valor }}?</p>
         <form action=""  method="post">
             {% csrf_token %}
-            <button class="btn btn-success" type="submit"> EXCLUIR DESPESA </button>
+            <button type="submit" class="btn btn-danger">Confirmar</button>
+            <a href="{% url 'lista_despesas' %}" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
 </div>
