@@ -12,4 +12,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let labelDescricao = document.querySelector('label[for="id_descricao"]');
+        if (labelDescricao) {
+            labelDescricao.textContent = 'Descrição';
+        }
+    });
+</script>
+
 {% endblock %}
